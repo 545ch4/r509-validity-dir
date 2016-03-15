@@ -18,7 +18,7 @@ module R509::Validity::Dir
          raise ArgumentError.new("Serial and issuer must be provided") if serial.to_s.empty? || issuer.to_s.empty?
 
          if config = @config[issuer]
-            if File.exists?("#{config[:new_certs_dir]}/#{File.basename(serial)}.pem")
+            if File.exists?("#{config[:new_certs_dir]}/#{File.basename(serial.to_s(16))}.pem")
                parsed_crl = R509::CRL::SignedList.load_from_file(config[:crl])
                if revocation_data = parsed_crl.revoked[serial.to_i]
                   return R509::Validity::Status.new(
